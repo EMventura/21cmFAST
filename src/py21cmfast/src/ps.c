@@ -1236,7 +1236,7 @@ float mean_SFRD(struct UserParams *user_params, struct FlagOptions *flag_options
 
     init_ps();
 
-    initialiseSigmaMInterpTable(0.999*astro_params->M_TURN/50.,1e5);
+    initialiseSigmaMInterpTable(1e5,1e20);
 
     double growthf;
     double thresh_atomic;
