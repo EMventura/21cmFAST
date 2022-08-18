@@ -164,9 +164,13 @@ struct parameters_gsl_SFR_General_int_{
 struct parameters_gsl_SFRD_int_{
     double z_obs;
     double gf_obs;
+    double m_crit_ato;
     double m_turn;
+    double m_turn_mini;
     double fstar10;
     double alpha_star;
+    double fstar7;
+    double alpha_star_mini;
 };
 
 struct parameters_gsl_SFR_con_int_{
@@ -1188,9 +1192,14 @@ double mean_SFRD_dlnMhalo(double lnM, void *params){
 
     double z = vals.z_obs;
     double growthf = vals.gf_obs;
+    double atomic_crit = vals.m_crit_ato;
     double M = exp(lnM);
+    double Turnover_mass = vals.m_turn;
+    double Turnover_mass_mini = vals.m_turn_mini;
     double f_ast = (vals.fstar10) * pow(M/1.0e10, (vals.alpha_star));
+    double f_ast_mini = (vals.fstar7) * pow(M/1.0e7, (vals.alpha_star_mini));
     double MassFunction;
+    int flag = vals.flag_mini;
 
     if(user_params_ps->HMF==0) {
         MassFunction = dNdM(z, M);
@@ -1207,11 +1216,17 @@ double mean_SFRD_dlnMhalo(double lnM, void *params){
 
     if (f_ast > 1)
         f_ast = 1;
-
-    return MassFunction * f_ast * exp(-vals.m_turn/M) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; //extra M for the dlnM
+    if (f_ast_mini > 1)
+        f_ast_mini = 1
+        
+    if flag == 0 // AC
+       return MassFunction * f_ast * exp(-vals.m_turn/M) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
+    
+    if flag == 1 // Mini
+      return MassFunction * f_ast_mini * exp(-vals.m_turn_mini/M) * exp(-M/vals.m_crit_ato) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
 }
 
-float mean_SFRD(struct UserParams *user_params, struct CosmoParams *cosmo_params, struct AstroParams *astro_params, int num_redshifts, float *redshifts, float *SFRD_mean){
+float mean_SFRD(struct UserParams *user_params, struct FlagOptions *flag_options, struct CosmoParams *cosmo_params, struct AstroParams *astro_params, int num_redshifts, float *turn_mass, float *turn_mass_mini, float *redshifts, float *SFRD_mean){
 
     int status;
 
@@ -1223,6 +1238,7 @@ float mean_SFRD(struct UserParams *user_params, struct CosmoParams *cosmo_params
     initialiseSigmaMInterpTable(0.999*astro_params->M_TURN/50.,1e20);
 
     double growthf;
+    double thresh_atomic;
 
     int i;
 
@@ -1235,13 +1251,20 @@ float mean_SFRD(struct UserParams *user_params, struct CosmoParams *cosmo_params
     for(i=0;i<num_redshifts;i++) {
 
         growthf = dicke(redshifts[i]);
+        thresh_atomic = atomic_cooling_threshold(redshifts[i]);
 
         struct parameters_gsl_SFRD_int_ parameters_gsl_SFRD = {
             .z_obs = redshifts[i],
+            .m_turn = turn_mass[i],
+            .m_turn_mini = turn_mass_mini[i]
             .gf_obs = growthf,
-            .m_turn = astro_params->M_TURN,
+            .m_crit_ato = thresh_atomic,
+            //.m_turn = astro_params->M_TURN,
             .fstar10 = astro_params->F_STAR10,
             .alpha_star = astro_params->ALPHA_STAR,
+            .fstar7 = astro_params->F_STAR7_MINI,
+            .alpha_star_mini = astro_params->ALPHA_STAR_MINI,
+            .flag_mini = flag_options->USE_MINI_HALOS
         };
 
         if(user_params_ps->HMF<4 && user_params_ps->HMF>-1) {
@@ -1249,9 +1272,18 @@ float mean_SFRD(struct UserParams *user_params, struct CosmoParams *cosmo_params
             F.function = &mean_SFRD_dlnMhalo;
             F.params = &parameters_gsl_SFRD;
 
-            lower_limit = log(astro_params->M_TURN/50.);
-            upper_limit = log(FMAX(global_params.M_MAX_INTEGRAL, astro_params->M_TURN*100));
-
+            //lower_limit = log(astro_params->M_TURN/50.);
+            //upper_limit = log(FMAX(global_params.M_MAX_INTEGRAL, astro_params->M_TURN*100));
+            if(flag_options->USE_MINI_HALOS == 1){
+              lower_limit = log(turn_mass_mini[i]/50.);
+              upper_limit = log(FMAX(global_params.M_MAX_INTEGRAL, turn_mass_mini[i]*100));
+              }
+              
+            if(flag_options->USE_MINI_HALOS == 0){
+              lower_limit = log(astro_params->M_TURN/50.);
+              upper_limit = log(FMAX(global_params.M_MAX_INTEGRAL, astro_params->M_TURN*100));
+              }
+              
             gsl_set_error_handler_off();
 
             status = gsl_integration_qag (&F, lower_limit, upper_limit, 0, rel_tol, 1000, GSL_INTEG_GAUSS61, w, &result, &error);

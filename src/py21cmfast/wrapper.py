@@ -317,7 +317,7 @@ def get_all_fieldnames(
 # ======================================================================================
 # WRAPPING FUNCTIONS
 # ======================================================================================
-def compute_SFRD(*, redshifts, user_params=None, cosmo_params=None, astro_params=None):
+def compute_SFRD(*, redshifts, Turn_mini, Turn, user_params=None, cosmo_params=None, astro_params=None):
     """Compute the Star-formation rate density.
 
     Parameters
@@ -345,11 +345,16 @@ def compute_SFRD(*, redshifts, user_params=None, cosmo_params=None, astro_params
 
     redshifts = np.array(redshifts, dtype="float32")
     SFRD_vals = np.array(SFRD_vals, dtype="float32")
+    
+    Turn_vals = np.array(Turn, dtype="float32")
+    Turn_mini_vals = np.array(Turn_mini, dtype="float32")
 
     z = ffi.cast("float *", ffi.from_buffer(redshifts))
     SFRD = ffi.cast("float *", ffi.from_buffer(SFRD_vals))
+    Mturn = ffi.cast("float *", ffi.from_buffer(Turn_vals))
+    Mturn_mini = ffi.cast("float *", ffi.from_buffer(Turn_mini_vals))
 
-    lib.mean_SFRD(user_params(), cosmo_params(), astro_params(), num_z, z, SFRD)
+    lib.mean_SFRD(user_params(), cosmo_params(), astro_params(), num_z, Mturn, Mturn_mini, z, SFRD)
 
     return SFRD
 
