@@ -183,7 +183,7 @@ int ObtainPhotonConsData(double *z_at_Q_data, double *Q_data, int *Ndata_analyti
 int ComputeLF(int nbins, struct UserParams *user_params, struct CosmoParams *cosmo_params, struct AstroParams *astro_params,
                struct FlagOptions *flag_options, int component, int NUM_OF_REDSHIFT_FOR_LF, float *z_LF, float *M_TURNs, double *M_uv_z, double *M_h_z, double *log10phi);
 
-float ComputeTau(struct UserParams *user_params, struct CosmoParams *cosmo_params, int Npoints, float *redshifts, float *global_xHI);
+float ComputeTau(struct UserParams *user_params, struct FlagOption *flag_options, struct CosmoParams *cosmo_params, int Npoints, float *redshifts, float *global_xHI);
 
 float mean_SFRD(struct UserParams *user_params, struct CosmoParams *cosmo_params, struct AstroParams *astro_params, int num_redshifts, float *turn_mass, float *turn_mass_mini, float *redshifts, float *SFRD_mean);
 
