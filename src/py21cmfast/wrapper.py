@@ -354,7 +354,7 @@ def compute_SFRD(*, redshifts, Turn_mini, Turn, flag_options=None, user_params=N
     Mturn = ffi.cast("float *", ffi.from_buffer(Turn_vals))
     Mturn_mini = ffi.cast("float *", ffi.from_buffer(Turn_mini_vals))
 
-    lib.mean_SFRD(user_params(), cosmo_params(), astro_params(), num_z, Mturn, Mturn_mini, z, SFRD)
+    lib.mean_SFRD(user_params(), flag_options(), cosmo_params(), astro_params(), num_z, Mturn, Mturn_mini, z, SFRD)
 
     return SFRD
 
