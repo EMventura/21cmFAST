@@ -169,6 +169,7 @@ struct parameters_gsl_SFRD_int_{
     double m_turn_mini;
     double fstar10;
     double alpha_star;
+    double flag_mini;
     double fstar7;
     double alpha_star_mini;
 };
