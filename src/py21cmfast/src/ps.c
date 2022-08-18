@@ -1281,7 +1281,7 @@ float mean_SFRD(struct UserParams *user_params, struct FlagOptions *flag_options
               }
               
             if(flag_options->USE_MINI_HALOS == 0){
-              lower_limit = log(pow(turn_mass[i],10)/50.);
+              lower_limit = log(pow(10,turn_mass[i])/50.);
               upper_limit = log(FMAX(global_params.M_MAX_INTEGRAL, pow(10,turn_mass[i])*100));
               }
               
