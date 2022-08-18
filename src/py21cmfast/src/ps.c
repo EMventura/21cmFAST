@@ -1221,10 +1221,10 @@ double mean_SFRD_dlnMhalo(double lnM, void *params){
         f_ast_mini = 1;
         
     if(flag == 0) // AC
-       return MassFunction * f_ast * exp(-vals.m_turn/M) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
+       return MassFunction * f_ast * exp(-(pow(10,vals.m_turn))/M) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
     
     if(flag == 1) // Mini
-      return MassFunction * f_ast_mini * exp(-vals.m_turn_mini/M) * exp(-M/vals.m_crit_ato) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
+      return MassFunction * f_ast_mini * exp(-(pow(10,vals.m_turn_mini))/M) * exp(-M/vals.m_crit_ato) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
 }
 
 float mean_SFRD(struct UserParams *user_params, struct FlagOptions *flag_options, struct CosmoParams *cosmo_params, struct AstroParams *astro_params, int num_redshifts, float *turn_mass, float *turn_mass_mini, float *redshifts, float *SFRD_mean){
