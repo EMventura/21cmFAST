@@ -1257,7 +1257,7 @@ float mean_SFRD(struct UserParams *user_params, struct FlagOptions *flag_options
         struct parameters_gsl_SFRD_int_ parameters_gsl_SFRD = {
             .z_obs = redshifts[i],
             .m_turn = turn_mass[i],
-            .m_turn_mini = turn_mass_mini[i]
+            .m_turn_mini = turn_mass_mini[i],
             .gf_obs = growthf,
             .m_crit_ato = thresh_atomic,
             //.m_turn = astro_params->M_TURN,
