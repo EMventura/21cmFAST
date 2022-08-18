@@ -1218,12 +1218,12 @@ double mean_SFRD_dlnMhalo(double lnM, void *params){
     if (f_ast > 1)
         f_ast = 1;
     if (f_ast_mini > 1)
-        f_ast_mini = 1
+        f_ast_mini = 1;
         
-    if flag == 0 // AC
+    if(flag == 0) // AC
        return MassFunction * f_ast * exp(-vals.m_turn/M) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
     
-    if flag == 1 // Mini
+    if(flag == 1) // Mini
       return MassFunction * f_ast_mini * exp(-vals.m_turn_mini/M) * exp(-M/vals.m_crit_ato) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
 }
 
