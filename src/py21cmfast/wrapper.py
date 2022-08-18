@@ -317,7 +317,7 @@ def get_all_fieldnames(
 # ======================================================================================
 # WRAPPING FUNCTIONS
 # ======================================================================================
-def compute_SFRD(*, redshifts, Turn_mini, Turn, user_params=None, cosmo_params=None, astro_params=None):
+def compute_SFRD(*, redshifts, Turn_mini, Turn, flag_options=None, user_params=None, cosmo_params=None, astro_params=None):
     """Compute the Star-formation rate density.
 
     Parameters
