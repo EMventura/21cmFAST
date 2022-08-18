@@ -1276,13 +1276,13 @@ float mean_SFRD(struct UserParams *user_params, struct FlagOptions *flag_options
             //lower_limit = log(astro_params->M_TURN/50.);
             //upper_limit = log(FMAX(global_params.M_MAX_INTEGRAL, astro_params->M_TURN*100));
             if(flag_options->USE_MINI_HALOS == 1){
-              lower_limit = log(pow(turn_mass_mini[i],10)/50.);
+              lower_limit = log(pow(10,turn_mass_mini[i])/50.);
               upper_limit = log(FMAX(global_params.M_MAX_INTEGRAL, thresh_atomic*100));
               }
               
             if(flag_options->USE_MINI_HALOS == 0){
               lower_limit = log(pow(turn_mass[i],10)/50.);
-              upper_limit = log(FMAX(global_params.M_MAX_INTEGRAL, pow(turn_mass[i],10)*100));
+              upper_limit = log(FMAX(global_params.M_MAX_INTEGRAL, pow(10,turn_mass[i])*100));
               }
               
             gsl_set_error_handler_off();
