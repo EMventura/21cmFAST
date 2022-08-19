@@ -1289,7 +1289,7 @@ float mean_SFRD(struct UserParams *user_params, struct FlagOptions *flag_options
             status = gsl_integration_qag (&F, lower_limit, upper_limit, 0, rel_tol, 1000, GSL_INTEG_GAUSS61, w, &result, &error);
             if(status!=0) {
                 LOG_ERROR("gsl integration error occured!");
-                LOG_ERROR("lower_limit=%e upper_limit=%e rel_tol=%e result=%e error=%e"lower_limit,upper_limit,rel_tol,result,error);
+                LOG_ERROR("lower_limit=%e upper_limit=%e rel_tol=%e result=%e error=%e",lower_limit,upper_limit,rel_tol,result,error);
                 LOG_ERROR("data: z=%e growthf=%e M_Turn=%e M_Turn_mini=%e Ato_Thresh=%e Alpha_star=%e F_Star10=%e t_star=%e\n",redshifts[i],growthf,turn_mass[i],turn_mass_mini[i], thresh_atomic,astro_params->ALPHA_STAR,astro_params->F_STAR10,astro_params->t_STAR);
                 GSL_ERROR(status);
             }
