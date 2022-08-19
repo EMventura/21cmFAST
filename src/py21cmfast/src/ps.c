@@ -1195,8 +1195,8 @@ double mean_SFRD_dlnMhalo(double lnM, void *params){
     double growthf = vals.gf_obs;
     double atomic_crit = vals.m_crit_ato;
     double M = exp(lnM);
-    double Turnover_mass = vals.m_turn;
-    double Turnover_mass_mini = vals.m_turn_mini;
+    double Turnover_mass = pow(10, vals.m_turn);
+    double Turnover_mass_mini = pow(10, vals.m_turn_mini);
     double f_ast = (vals.fstar10) * pow(M/1.0e10, (vals.alpha_star));
     double f_ast_mini = (vals.fstar7) * pow(M/1.0e7, (vals.alpha_star_mini));
     double MassFunction;
@@ -1221,10 +1221,10 @@ double mean_SFRD_dlnMhalo(double lnM, void *params){
         f_ast_mini = 1;
         
     if(flag == 0) // AC
-       return MassFunction * f_ast * exp(-(pow(10,Turnover_mass))/M) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
+       return MassFunction * f_ast * exp(-Turnover_mass/M) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
     
     if(flag == 1) // Mini
-      return MassFunction * f_ast_mini * exp(-(pow(10,Turnover_mass_mini))/M) * exp(-M/atomic_crit) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
+      return MassFunction * f_ast_mini * exp(-Turnover_mass_mini/M) * exp(-M/atomic_crit) * M * M * cosmo_params_ps->OMb/cosmo_params_ps->OMm; 
 }
 
 float mean_SFRD(struct UserParams *user_params, struct FlagOptions *flag_options, struct CosmoParams *cosmo_params, struct AstroParams *astro_params, int num_redshifts, float *turn_mass, float *turn_mass_mini, float *redshifts, float *SFRD_mean){
@@ -1236,7 +1236,7 @@ float mean_SFRD(struct UserParams *user_params, struct FlagOptions *flag_options
 
     init_ps();
 
-    initialiseSigmaMInterpTable(1e4,1e20);
+    initialiseSigmaMInterpTable(1e5,1e20);
 
     double growthf;
     double thresh_atomic;
@@ -1289,7 +1289,7 @@ float mean_SFRD(struct UserParams *user_params, struct FlagOptions *flag_options
             status = gsl_integration_qag (&F, lower_limit, upper_limit, 0, rel_tol, 1000, GSL_INTEG_GAUSS61, w, &result, &error);
             if(status!=0) {
                 LOG_ERROR("gsl integration error occured!");
-                LOG_ERROR("lower_limit=%e upper_limit=%e rel_tol=%e result=%e error=%e",lower_limit,upper_limit,rel_tol,result,error);
+                LOG_ERROR("lower_limit=%e upper_limit=%e rel_tol=%e result=%e error=%e"lower_limit,upper_limit,rel_tol,result,error);
                 LOG_ERROR("data: z=%e growthf=%e M_Turn=%e M_Turn_mini=%e Ato_Thresh=%e Alpha_star=%e F_Star10=%e t_star=%e\n",redshifts[i],growthf,turn_mass[i],turn_mass_mini[i], thresh_atomic,astro_params->ALPHA_STAR,astro_params->F_STAR10,astro_params->t_STAR);
                 GSL_ERROR(status);
             }
