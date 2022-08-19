@@ -1275,7 +1275,8 @@ float mean_SFRD(struct UserParams *user_params, struct FlagOptions *flag_options
             //lower_limit = log(astro_params->M_TURN/50.);
             //upper_limit = log(FMAX(global_params.M_MAX_INTEGRAL, astro_params->M_TURN*100));
             if(flag_options->USE_MINI_HALOS == 1){
-              lower_limit = log(pow(10,turn_mass_mini[i])/50.);
+              //lower_limit = log(pow(10,turn_mass_mini[i])/50.);
+              lower_limit = log(global_params.M_MIN_INTEGRAL);
               upper_limit = log(FMAX(global_params.M_MAX_INTEGRAL, thresh_atomic*100));
               }
               
