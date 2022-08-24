@@ -407,7 +407,7 @@ double spectral_emissivity(double nu_norm, int flag, int Population)
             // * Read in the data * //
             sprintf(filename,"%s/%s",global_params.external_table_path,STELLAR_SPECTRA_FILENAME);
             if (!(F = fopen(filename, "r"))){
-               LOG_ERROR("spectral_emissivity: Unable to open file: stellar_spectra.dat for reading.");
+               LOG_ERROR("spectral_emissivity: Unable to open file: stellar_spectra_fake.dat for reading.");
                 Throw IOError;
             }
 
